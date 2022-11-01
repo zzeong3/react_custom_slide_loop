@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Btn = styled.button`
   position: absolute;
@@ -13,14 +13,13 @@ const Btn = styled.button`
 function Btns({ panel }) {
   const [Enabled, setEnabled] = useState(true);
 
-  const convertSpeed = (el) => {
-    return parseFloat(getComputedStyle(el).transitionDuration) * 1000;
-  }
+  const convertSpeed = (el) => parseFloat(getComputedStyle(el).transitionDuration) * 1000;
+
 
   let delay = null;
   panel.current && (delay = convertSpeed(panel.current.children[0]));
 
-  const movePrev = () => {
+  const moveNext = () => {
     if(!Enabled) return;
     setEnabled(false);
     panel.current.append(panel.current.firstElementChild);
@@ -28,12 +27,17 @@ function Btns({ panel }) {
   }
 
 
-  const moveNext = () => {
+  const movePrev = () => {
     if(!Enabled) return;
     setEnabled(false);
     panel.current.prepend(panel.current.lastElementChild);
     setTimeout(()=>setEnabled(true), 500);
   }
+
+  useEffect(()=>{
+    movePrev();
+    movePrev();
+  },[])
 
 
   return (
